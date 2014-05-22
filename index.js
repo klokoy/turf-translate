@@ -3,7 +3,6 @@ module.exports = function(fc){
     switch(fc.geometry.type){
       case 'Point':
         fc.geometry.coordinates = flipCoordinate(fc.geometry.coordinates)
-        done(null, fc)
         return fc;
         break
       case 'LineString':
@@ -11,7 +10,6 @@ module.exports = function(fc){
           coordinates = flipCoordinate(coordinates)
           fc.geometry.coordinates[i] = coordinates
         })
-        done(null, fc)
         return fc;
         break
       case 'Polygon':

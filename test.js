@@ -1,22 +1,22 @@
 var test = require('tape')
 var flip = require('./')
 var point = require('turf-point')
-var point = require('turf-linestring')
-var point = require('turf-polygon')
-var point = require('turf-featurecollection')
+var linestring = require('turf-linestring')
+var polygon = require('turf-polygon')
+var featurecollection = require('turf-featurecollection')
 
 test('flip', function(t){
   // Point
-  var pt = t.point(1,0)
-  var flippedPt = t.flip(pt)
+  var pt = point(1,0)
+  var flippedPt = flip(pt)
 
   t.ok(flippedPt, 'should flip a point coordinate')  
   t.equal(flippedPt.geometry.coordinates[0], 0)
   t.equal(flippedPt.geometry.coordinates[1], 1)
 
   // Line
-  var line = t.linestring([[1,0], [1,0]])
-  var flippedLine = t.flip(line)
+  var line = linestring([[1,0], [1,0]])
+  var flippedLine = flip(line)
   
   t.ok(flippedLine, 'should flip the x and ys of a linestring')
   t.equal(flippedLine.geometry.coordinates[0][0], 0)
@@ -26,8 +26,8 @@ test('flip', function(t){
 
 
   // Polygon
-  var poly = t.polygon([[[1,0], [1,0], [1,2]], [[.2,.2], [.3,.3],[.1,.2]]])
-  var flippedPoly = t.flip(poly)
+  var poly = polygon([[[1,0], [1,0], [1,2]], [[.2,.2], [.3,.3],[.1,.2]]])
+  var flippedPoly = flip(poly)
 
   t.ok(flippedPoly, 'should flip the x and ys of a polygon')
   t.equal(flippedPoly.geometry.coordinates[0][0][0], 0)
@@ -41,10 +41,10 @@ test('flip', function(t){
 
 
   // FeatureCollection
-  var pt1 = t.point(1,0)
-  var pt2 = t.point(1,0)
-  var fc = t.featurecollection([pt1, pt2])
-  var flippedFC = t.flip(fc, function(err, flipped){
+  var pt1 = point(1,0)
+  var pt2 = point(1,0)
+  var fc = featurecollection([pt1, pt2])
+  var flippedFC = flip(fc)
   
   t.ok(flippedFC, 'should flip the x and ys of a featurecollection')
   t.equal(flippedFC.features[0].geometry.coordinates[0], 0)
