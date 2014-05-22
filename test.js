@@ -1,103 +1,56 @@
-var t = require('../index'),
-  should = require('should')
+var test = require('tape')
+var flip = require('./')
+var point = require('turf-point')
+var point = require('turf-linestring')
+var point = require('turf-polygon')
+var point = require('turf-featurecollection')
 
-describe('flip', function(){
-  it('should flip the x and ys of a point', function(done){
-    var pt = t.point(1,0)
-    var syncFlipped = t.flip(pt, function(err, flipped){
-      if(err) throw err
-      flipped.should.be.ok
-      flipped.geometry.coordinates[0].should.equal(0)
-      flipped.geometry.coordinates[1].should.equal(1)
-    })
+test('flip', function(t){
+  // Point
+  var pt = t.point(1,0)
+  var flippedPt = t.flip(pt)
 
-    if (typeof syncFlipped === 'Error') {
-      throw syncFlipped;
-    }
+  t.ok(flippedPt, 'should flip a point coordinate')  
+  t.equal(flippedPt.geometry.coordinates[0], 0)
+  t.equal(flippedPt.geometry.coordinates[1], 1)
 
-    syncFlipped.should.be.ok;
-    syncFlipped.geometry.coordinates[0].should.equal(0);
-    syncFlipped.geometry.coordinates[1].should.equal(1);
+  // Line
+  var line = t.linestring([[1,0], [1,0]])
+  var flippedLine = t.flip(line)
+  
+  t.ok(flippedLine, 'should flip the x and ys of a linestring')
+  t.equal(flippedLine.geometry.coordinates[0][0], 0)
+  t.equal(flippedLine.geometry.coordinates[0][1], 1)
+  t.equal(flippedLine.geometry.coordinates[1][0], 0)
+  t.equal(flippedLine.geometry.coordinates[1][1], 1)
 
-    done();
-  })
-  it('should flip the x and ys of a linestring', function(done){
-    var line = t.linestring([[1,0], [1,0]])
-    var syncFlipped = t.flip(line, function(err, flipped){
-      if(err) throw err
-      flipped.should.be.ok
-      flipped.geometry.coordinates[0][0].should.equal(0)
-      flipped.geometry.coordinates[0][1].should.equal(1)
-      flipped.geometry.coordinates[1][0].should.equal(0)
-      flipped.geometry.coordinates[1][1].should.equal(1)
-    })
 
-    if (typeof syncFlipped === 'Error') {
-      throw syncFlipped;
-    }
+  // Polygon
+  var poly = t.polygon([[[1,0], [1,0], [1,2]], [[.2,.2], [.3,.3],[.1,.2]]])
+  var flippedPoly = t.flip(poly)
 
-    syncFlipped.should.be.ok;
-    syncFlipped.geometry.coordinates[0][0].should.equal(0);
-    syncFlipped.geometry.coordinates[0][1].should.equal(1);
-    syncFlipped.geometry.coordinates[1][0].should.equal(0);
-    syncFlipped.geometry.coordinates[1][1].should.equal(1);
+  t.ok(flippedPoly, 'should flip the x and ys of a polygon')
+  t.equal(flippedPoly.geometry.coordinates[0][0][0], 0)
+  t.equal(flippedPoly.geometry.coordinates[0][0][1], 1)
+  t.equal(flippedPoly.geometry.coordinates[0][1][0], 0)
+  t.equal(flippedPoly.geometry.coordinates[0][1][1], 1)
+  t.equal(flippedPoly.geometry.coordinates[0][2][0], 2)
+  t.equal(flippedPoly.geometry.coordinates[0][2][1], 1)
+  t.equal(flippedPoly.geometry.coordinates[1][2][0], .2)
+  t.equal(flippedPoly.geometry.coordinates[1][2][1], .1)
 
-    done();
-  })
-  it('should flip the x and ys of a polygon', function(done){
-    var poly = t.polygon([[[1,0], [1,0], [1,2]], [[.2,.2], [.3,.3],[.1,.2]]])
-    var syncFlipped = t.flip(poly, function(err, flipped){
-      if(err) throw err
-      flipped.should.be.ok
-      flipped.geometry.coordinates[0][0][0].should.equal(0)
-      flipped.geometry.coordinates[0][0][1].should.equal(1)
-      flipped.geometry.coordinates[0][1][0].should.equal(0)
-      flipped.geometry.coordinates[0][1][1].should.equal(1)
-      flipped.geometry.coordinates[0][2][0].should.equal(2)
-      flipped.geometry.coordinates[0][2][1].should.equal(1)
-      flipped.geometry.coordinates[1][2][0].should.equal(.2)
-      flipped.geometry.coordinates[1][2][1].should.equal(.1)
-    })
 
-    if (typeof syncFlipped === 'Error') {
-      throw syncFlipped;
-    }
+  // FeatureCollection
+  var pt1 = t.point(1,0)
+  var pt2 = t.point(1,0)
+  var fc = t.featurecollection([pt1, pt2])
+  var flippedFC = t.flip(fc, function(err, flipped){
+  
+  t.ok(flippedFC, 'should flip the x and ys of a featurecollection')
+  t.equal(flippedFC.features[0].geometry.coordinates[0], 0)
+  t.equal(flippedFC.features[0].geometry.coordinates[1], 1)
+  t.equal(flippedFC.features[1].geometry.coordinates[0], 0)
+  t.equal(flippedFC.features[1].geometry.coordinates[1], 1)
 
-    syncFlipped.should.be.ok;
-    syncFlipped.geometry.coordinates[0][0][0].should.equal(0);
-    syncFlipped.geometry.coordinates[0][0][1].should.equal(1);
-    syncFlipped.geometry.coordinates[0][1][0].should.equal(0);
-    syncFlipped.geometry.coordinates[0][1][1].should.equal(1);
-    syncFlipped.geometry.coordinates[0][2][0].should.equal(2);
-    syncFlipped.geometry.coordinates[0][2][1].should.equal(1);
-    syncFlipped.geometry.coordinates[1][2][0].should.equal(.2);
-    syncFlipped.geometry.coordinates[1][2][1].should.equal(.1);
-
-    done();
-  })
-  it('should flip the x and ys of a featurecollection', function(done){
-    var pt1 = t.point(1,0)
-    var pt2 = t.point(1,0)
-    var fc = t.featurecollection([pt1, pt2])
-    var syncFlipped = t.flip(fc, function(err, flipped){
-      if(err) throw err
-      flipped.should.be.ok
-      flipped.features[0].geometry.coordinates[0].should.equal(0)
-      flipped.features[0].geometry.coordinates[1].should.equal(1)
-      flipped.features[1].geometry.coordinates[0].should.equal(0)
-      flipped.features[1].geometry.coordinates[1].should.equal(1)
-    })
-
-    if (typeof syncFlipped === 'Error') {
-      throw syncFlipped;
-    }
-
-    syncFlipped.should.be.ok;
-    syncFlipped.features[0].geometry.coordinates[0].should.equal(0);
-    syncFlipped.features[0].geometry.coordinates[1].should.equal(1);
-    syncFlipped.features[1].geometry.coordinates[0].should.equal(0);
-    syncFlipped.features[1].geometry.coordinates[1].should.equal(1);
-
-    done();
-  })
-}) 
+  t.end()
+})
