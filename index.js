@@ -54,7 +54,5 @@ module.exports = function(fc){
 }
 
 var flipCoordinate = function(coordinates){
-  x = coordinates[0]
-  y = coordinates[1]
-  return([y, x])
+  return([coordinates[1], coordinates[0]])
 }
