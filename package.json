@@ -25,7 +25,7 @@
   "devDependencies": {
     "tape": "^2.13.1",
     "turf-featurecollection": "^0.1.0",
-    "turf-lineString": "^0.1.0",
+    "turf-linestring": "^0.1.0",
     "turf-point": "^0.1.0",
     "turf-polygon": "^0.1.0"
   }
