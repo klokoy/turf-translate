@@ -23,10 +23,10 @@
   },
   "homepage": "https://github.com/morganherlocker/turf-flip",
   "devDependencies": {
-    "tape": "^2.13.1",
+    "tape": "^2.13.4",
     "turf-featurecollection": "^0.1.0",
-    "turf-linestring": "^0.1.0",
-    "turf-point": "^0.1.0",
-    "turf-polygon": "^0.1.0"
+    "turf-linestring": "^0.1.1",
+    "turf-point": "^0.1.1",
+    "turf-polygon": "^0.1.1"
   }
 }
