@@ -1,14 +1,15 @@
 /**
- * Takes a point, linestring, polygon, or featurecollection, and
+ * Takes any GeoJSON object and
  * flips all of its coordinates from [x, y] to [y, x].
  *
  * @module turf/flip
- * @param {*} input
+ * @param {GeoJSON} input
  * @returns {FeatureCollection} output
  * @example
- * var poly = turf.polygon([[[1,0], [1,0], [1,2]], [[.2,.2], [.3,.3],[.1,.2]]])
- * var flipped = turf.flip(poly)
- * console.log(flipped)
+ * var poly = turf.polygon([[[1,0], [1,0], [1,2]], [[.2,.2], [.3,.3],[.1,.2]]]);
+ * //=poly
+ * var flipped = turf.flip(poly);
+ * //=flipped
  */
 module.exports = function(fc) {
   if(fc.type === 'Feature'){
