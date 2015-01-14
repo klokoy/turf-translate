@@ -11,61 +11,65 @@
  * var flipped = turf.flip(poly);
  * //=flipped
  */
-module.exports = function(fc) {
-  if(fc.type === 'Feature'){
-    switch(fc.geometry.type){
-      case 'Point':
-        fc.geometry.coordinates = flipCoordinate(fc.geometry.coordinates);
-        return fc;
-        break;
-      case 'LineString':
-        fc.geometry.coordinates.forEach(function(coordinates, i){
-          coordinates = flipCoordinate(coordinates);
-          fc.geometry.coordinates[i] = coordinates;
-        });
-        return fc;
-        break;
-      case 'Polygon':
-        fc.geometry.coordinates.forEach(function(ring, i){
-          ring.forEach(function(coordinates, k){
-            coordinates = flipCoordinate(coordinates);
-            fc.geometry.coordinates[i][k] = coordinates;
-          });
-        });
-        return fc;
-        break;
+module.exports = flipAny;
+
+function flipAny(_) {
+    // ensure that we don't modify features in-place and changes to the
+    // output do not change the previous feature, including changes to nested
+    // properties.
+    var input = JSON.parse(JSON.stringify(_));
+    switch (input.type) {
+        case 'FeatureCollection':
+            for (var i = 0; i < input.features.length; i++)
+                flipGeometry(input.features[i].geometry);
+            return input;
+        case 'Feature':
+            flipGeometry(input.geometry);
+            return input;
+        default:
+            flipGeometry(input);
+            return input;
     }
-  }
-  else if(fc.type === 'FeatureCollection'){
-    fc.features.forEach(function(feature){
-      switch(feature.geometry.type){
-        case 'Point':
-          feature.geometry.coordinates = flipCoordinate(feature.geometry.coordinates);
-          break;
-        case 'LineString':
-          feature.geometry.coordinates.forEach(function(coordinates, i){
-            coordinates = flipCoordinate(coordinates);
-            feature.geometry.coordinates[i] = coordinates;
-          });
-          break;
-        case 'Polygon':
-          feature.geometry.coordinates.forEach(function(ring, i){
-            ring.forEach(function(coordinates, k){
-              coordinates = flipCoordinate(coordinates);
-              feature.geometry.coordinates[i][k] = coordinates;
-            });
-          });
-          break;
-      }
-    });
-    return fc;
-  }
-  else {
-    var err = new Error('Unknown geometry type');
-    return err;
-  }
 }
 
-function flipCoordinate (coordinates) {
-  return([coordinates[1], coordinates[0]]);
+function flipGeometry(geometry) {
+    var coords = geometry.coordinates;
+    switch(geometry.type) {
+      case 'Point':
+        flip0(coords);
+        break;
+      case 'LineString':
+      case 'MultiPoint':
+        flip1(coords);
+        break;
+      case 'Polygon':
+      case 'MultiLineString':
+        flip2(coords);
+        break;
+      case 'MultiPolygon':
+        flip3(coords);
+        break;
+      case 'GeometryCollection':
+        geometry.geometries.forEach(flipGeometry);
+        break;
+    }
+}
+
+function flip0(coord) {
+    coord.reverse();
+}
+
+function flip1(coords) {
+  for(var i = 0; i < coords.length; i++) coords[i].reverse();
+}
+
+function flip2(coords) {
+  for(var i = 0; i < coords.length; i++)
+    for(var j = 0; j < coords[i].length; j++) coords[i][j].reverse();
+}
+
+function flip3(coords) {
+  for(var i = 0; i < coords.length; i++)
+    for(var j = 0; j < coords[i].length; j++)
+      for(var k = 0; k < coords[i][j].length; k++) coords[i][j][k].reverse();
 }
