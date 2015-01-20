@@ -1,27 +1,27 @@
 {
-  "name": "turf-flip",
-  "version": "1.0.1",
-  "description": "turf flip module",
+  "name": "turf-translate",
+  "version": "1.0.0",
+  "description": "turf translate module",
   "main": "index.js",
   "scripts": {
     "test": "tape test.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/morganherlocker/turf-flip.git"
+    "url": "https://github.com/klokoy/turf-translate.git"
   },
   "keywords": [
     "turf",
     "geojson",
     "coordinate",
-    "flip"
+    "translate"
   ],
-  "author": "morganherlocker",
+  "author": "Kim Lokøy",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/morganherlocker/turf-flip/issues"
+    "url": "https://github.com/klokoy/turf-translate/issues"
   },
-  "homepage": "https://github.com/morganherlocker/turf-flip",
+  "homepage": "https://github.com/klokoy/turf-translate",
   "devDependencies": {
     "benchmark": "^1.0.0",
     "tape": "^2.13.4",

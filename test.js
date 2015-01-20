@@ -1,63 +1,69 @@
 var test = require('tape');
-var flip = require('./');
+var translate = require('./');
 var point = require('turf-point');
 var linestring = require('turf-linestring');
 var polygon = require('turf-polygon');
 var featurecollection = require('turf-featurecollection');
 
-test('flip', function(t) {
+test('translate', function(t) {
   // Point Geometry
   var pt = point(1,0);
-  var flippedPt = flip(pt.geometry);
-  t.equal(flippedPt.coordinates[0], 0);
-  t.equal(flippedPt.coordinates[1], 1);
+
+  //create a translator function to move 2, 1
+  var translator = function(point) {
+    return [point[0] + 2, point[1] + 1]
+  };
+  var translatedPt = translate(pt.geometry, translator);
+
+  t.equal(translatedPt.coordinates[0], 3);
+  t.equal(translatedPt.coordinates[1], 1);
 
   t.equal(pt.geometry.coordinates[0], 1, 'does not mutate original');
   t.equal(pt.geometry.coordinates[1], 0, 'does not mutate original');
 
   // Point
   var pt2 = point(1,0);
-  var flippedPt2 = flip(pt2);
+  var translatedPt2 = translate(pt2, translator);
 
-  t.ok(flippedPt2, 'should flip a point coordinate');
-  t.equal(flippedPt2.geometry.coordinates[0], 0);
-  t.equal(flippedPt2.geometry.coordinates[1], 1);
+  t.ok(translatedPt2, 'should translate a point coordinate');
+  t.equal(translatedPt2.geometry.coordinates[0], 3);
+  t.equal(translatedPt2.geometry.coordinates[1], 1);
 
   // Line
-  var line = linestring([[1,0], [1,0]]);
-  var flippedLine = flip(line);
+  var line = linestring([[1,0], [3,4]]);
+  var translatedLine = translate(line, translator);
 
-  t.ok(flippedLine, 'should flip the x and ys of a linestring');
-  t.equal(flippedLine.geometry.coordinates[0][0], 0);
-  t.equal(flippedLine.geometry.coordinates[0][1], 1);
-  t.equal(flippedLine.geometry.coordinates[1][0], 0);
-  t.equal(flippedLine.geometry.coordinates[1][1], 1);
+  t.ok(translatedLine, 'should translate the x and ys of a linestring');
+  t.equal(translatedLine.geometry.coordinates[0][0], 3);
+  t.equal(translatedLine.geometry.coordinates[0][1], 1);
+  t.equal(translatedLine.geometry.coordinates[1][0], 5);
+  t.equal(translatedLine.geometry.coordinates[1][1], 5);
 
   // Polygon
   var poly = polygon([[[1,0], [1,0], [1,2]], [[.2,.2], [.3,.3],[.1,.2]]]);
-  var flippedPoly = flip(poly);
+  var translatedPoly = translate(poly, translator);
 
-  t.ok(flippedPoly, 'should flip the x and ys of a polygon');
-  t.equal(flippedPoly.geometry.coordinates[0][0][0], 0);
-  t.equal(flippedPoly.geometry.coordinates[0][0][1], 1);
-  t.equal(flippedPoly.geometry.coordinates[0][1][0], 0);
-  t.equal(flippedPoly.geometry.coordinates[0][1][1], 1);
-  t.equal(flippedPoly.geometry.coordinates[0][2][0], 2);
-  t.equal(flippedPoly.geometry.coordinates[0][2][1], 1);
-  t.equal(flippedPoly.geometry.coordinates[1][2][0], 0.2);
-  t.equal(flippedPoly.geometry.coordinates[1][2][1], 0.1);
+  t.ok(translatedPoly, 'should translate the x and ys of a polygon');
+  t.equal(translatedPoly.geometry.coordinates[0][0][0], 3);
+  t.equal(translatedPoly.geometry.coordinates[0][0][1], 1);
+  t.equal(translatedPoly.geometry.coordinates[0][1][0], 3);
+  t.equal(translatedPoly.geometry.coordinates[0][1][1], 1);
+  t.equal(translatedPoly.geometry.coordinates[0][2][0], 3);
+  t.equal(translatedPoly.geometry.coordinates[0][2][1], 3);
+  t.equal(translatedPoly.geometry.coordinates[1][2][0], 2.1);
+  t.equal(translatedPoly.geometry.coordinates[1][2][1], 1.2);
 
   // FeatureCollection
   var pt1 = point(1,0);
-  var pt2 = point(1,0);
+  var pt2 = point(2,1);
   var fc = featurecollection([pt1, pt2]);
-  var flippedFC = flip(fc);
+  var translatedFC = translate(fc, translator);
 
-  t.ok(flippedFC, 'should flip the x and ys of a featurecollection');
-  t.equal(flippedFC.features[0].geometry.coordinates[0], 0);
-  t.equal(flippedFC.features[0].geometry.coordinates[1], 1);
-  t.equal(flippedFC.features[1].geometry.coordinates[0], 0);
-  t.equal(flippedFC.features[1].geometry.coordinates[1], 1);
+  t.ok(translatedFC, 'should translate the x and ys of a featurecollection');
+  t.equal(translatedFC.features[0].geometry.coordinates[0], 3);
+  t.equal(translatedFC.features[0].geometry.coordinates[1], 1);
+  t.equal(translatedFC.features[1].geometry.coordinates[0], 4);
+  t.equal(translatedFC.features[1].geometry.coordinates[1], 2);
 
   t.end();
 });

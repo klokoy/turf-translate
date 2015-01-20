@@ -1,13 +1,14 @@
-turf-flip
+turf-translate
 =========
-[![Build Status](https://travis-ci.org/Turfjs/turf-flip.svg)](https://travis-ci.org/Turfjs/turf-flip)
+[![Build Status](https://travis-ci.org/Turfjs/turf-translate.svg)](https://travis-ci.org/Turfjs/turf-translate)
 
-Takes a point, linestring, polygon, or featurecollection, and flips all of its coordinates from [x, y] to [y, x].
+Takes a point, linestring, polygon, or featurecollection, and translates all of its coordinates with the given translator function. The
+translator function is called with each coord in the argument and should return a new translated point.
 
 ###Install
 
 ```sh
-npm install turf-flip
+npm install turf-translate
 ```
 
 ###Parameters
@@ -19,18 +20,23 @@ npm install turf-flip
 ###Usage
 
 ```js
-flip(fc)
+translate(fc, translator)
 ```
 
 ###Example
 
 ```js
-var flip = require('turf-flip')
+var translate = require('turf-translate')
 var polygon = require('turf-polygon')
 
 var poly = polygon([[[1,0], [1,0], [1,2]], [[.2,.2], [.3,.3],[.1,.2]]])
 
-var flipped = flip(poly)
+//move the polygon 1, 1
+var translator = function(point) {
+	return [point[0] + 1, point[1] + 1];
+}
 
-console.log(flipped)
+var translated = translate(poly, translator)
+
+console.log(translated)
 ```

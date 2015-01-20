@@ -1,4 +1,4 @@
-var flip = require('./');
+var translate = require('./');
 var Benchmark = require('benchmark');
 var fs = require('fs');
 var point = require('turf-point');
@@ -13,19 +13,23 @@ var pt1 = point(1,0);
 var pt2 = point(1,0);
 var fc = featurecollection([pt1, pt2]);
 
-var suite = new Benchmark.Suite('turf-flip');
+var translator = function(point) {
+  return [point[0] + 1, point[1] + 1];
+};
+
+var suite = new Benchmark.Suite('turf-translate');
 suite
-  .add('turf-flip#Point',function () {
-    flip(pt);
+  .add('turf-translate#Point',function () {
+    translate(pt, tranlator);
   })
-  .add('turf-flip#LineString',function () {
-    flip(line);
+  .add('turf-translate#LineString',function () {
+    translate(line, tranlator);
   })
-  .add('turf-flip#Polygon',function () {
-    flip(poly);
+  .add('turf-translate#Polygon',function () {
+    translate(poly, tranlator);
   })
-  .add('turf-flip#FeatureCollection',function () {
-    flip(fc);
+  .add('turf-translate#FeatureCollection',function () {
+    translate(fc, tranlator);
   })
   .on('cycle', function (event) {
     console.log(String(event.target));
