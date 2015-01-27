@@ -36,7 +36,7 @@ var translator = function(point) {
 	return [point[0] + 1, point[1] + 1];
 }
 
-var translated = translate(poly, translator)
+var translated = translate(poly, translator);
 
 console.log(translated)
 ```
