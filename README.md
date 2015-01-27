@@ -1,6 +1,6 @@
 turf-translate
 =========
-[![Build Status](https://travis-ci.org/Turfjs/turf-translate.svg)](https://travis-ci.org/Turfjs/turf-translate)
+[![Build Status](https://travis-ci.org/klokoy/turf-translate.svg?branch=master)](https://travis-ci.org/klokoy/turf-translate.svg?branch=master)
 
 Takes a point, linestring, polygon, or featurecollection, and translates all of its coordinates with the given translator function. The
 translator function is called with each coord in the argument and should return a new translated point.
